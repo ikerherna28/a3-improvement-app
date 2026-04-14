@@ -1,0 +1,14 @@
+{
+  "name": "a3-improvement-app",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Monorepo base para A3 Improvement App (backend + frontend)",
+  "scripts": {
+    "install:all": "npm install --prefix backend && npm install --prefix frontend",
+    "dev": "npm run dev --prefix backend",
+    "dev:backend": "npm run dev --prefix backend",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "start": "npm run start --prefix backend",
+    "build:frontend": "npm run build --prefix frontend"
+  }
+}

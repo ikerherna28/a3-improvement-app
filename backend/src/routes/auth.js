@@ -1,0 +1,14 @@
+import { Router } from "express";
+
+import { login, register } from "../controllers/authController.js";
+import { authenticateJWT } from "../middleware/auth.js";
+
+const router = Router();
+
+router.post("/register", register);
+router.post("/login", login);
+router.get("/me", authenticateJWT, (req, res) => {
+  res.json({ user: req.user });
+});
+
+export default router;
