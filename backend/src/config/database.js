@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import bcrypt from "bcryptjs";
 import pg from "pg";
 import { newDb } from "pg-mem";
 
@@ -12,6 +13,7 @@ const { Pool } = pg;
 let pool = null;
 let dbMode = "none";
 let migrationsApplied = false;
+let demoUserSeeded = false;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -34,6 +36,32 @@ async function runMigrationsInternal() {
   migrationsApplied = true;
 }
 
+async function seedDemoUser() {
+  if (demoUserSeeded || env.nodeEnv === "production") {
+    return;
+  }
+
+  const demoEmail = "admin@example.com";
+  const demoPassword = "Password123";
+
+  const existingUser = await pool.query("SELECT id FROM users WHERE email = $1 LIMIT 1", [demoEmail]);
+  if (existingUser.rowCount > 0) {
+    demoUserSeeded = true;
+    return;
+  }
+
+  const passwordHash = await bcrypt.hash(demoPassword, 10);
+  await pool.query(
+    `
+      INSERT INTO users (name, email, password_hash, role)
+      VALUES ($1, $2, $3, $4)
+    `,
+    ["Administrador", demoEmail, passwordHash, "admin"]
+  );
+
+  demoUserSeeded = true;
+}
+
 async function initializeMemoryPool() {
   const memDb = newDb();
   const memPg = memDb.adapters.createPg();
@@ -45,10 +73,18 @@ async function initializeMemoryPool() {
   if (env.autoMigrate) {
     await runMigrationsInternal();
   }
+
+  await seedDemoUser();
 }
 
 async function initializeRealPool() {
   if (!env.databaseUrl) {
+    if (env.dbFallbackToMemory) {
+      console.warn("DATABASE_URL no configurado, usando base de datos en memoria");
+      await initializeMemoryPool();
+      return;
+    }
+
     throw new Error("DATABASE_URL no configurado. Revisa backend/.env");
   }
 
@@ -63,6 +99,8 @@ async function initializeRealPool() {
   if (env.autoMigrate) {
     await runMigrationsInternal();
   }
+
+  await seedDemoUser();
 }
 
 async function ensurePool() {

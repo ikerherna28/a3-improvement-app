@@ -10,8 +10,21 @@ import apiRouter from "./routes/index.js";
 
 const app = express();
 
+const allowedOrigins = new Set(env.corsOrigins);
+
 app.use(helmet());
-app.use(cors({ origin: env.corsOrigin }));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.has(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error(`Origen no permitido por CORS: ${origin}`));
+    },
+  })
+);
 app.use(express.json({ limit: "2mb" }));
 app.use(morgan("dev"));
 

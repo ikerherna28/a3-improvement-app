@@ -156,6 +156,16 @@ Body opcional para filtros:
 
 La paleta se aplica en `frontend/src/index.css` y `frontend/tailwind.config.js`.
 
+## 7.1) Logos corporativos locales
+
+Los logos oficiales de TK Elevator se usan desde el frontend con fondo transparente:
+
+- `frontend/src/assets/branding/logo_blanco.png`
+- `frontend/src/assets/branding/logo_color.png`
+- `frontend/src/assets/branding/logo_negro.png`
+
+La seleccion del logo por contexto visual se realiza en `frontend/src/components/BrandLogo.jsx`.
+
 ## 8) Primer commit (instrucciones)
 
 ```bash
@@ -165,3 +175,17 @@ git push origin main
 ```
 
 Si la rama principal no es `main`, reemplazar por la rama correcta.
+
+## 9) Despliegue en produccion
+
+Ver la guia completa en [docs/DEPLOY_A3_PRODUCCION.md](docs/DEPLOY_A3_PRODUCCION.md).
+
+## 10) Guia funcional
+
+La explicacion completa de como funciona la aplicacion, el flujo de login, la IA, la base de datos y el responsive esta en [docs/USO_Y_FUNCIONAMIENTO_A3.md](docs/USO_Y_FUNCIONAMIENTO_A3.md).
+
+Resumen rapido:
+- Backend en Render usando `render.yaml`.
+- Frontend en Vercel usando `frontend/vercel.json`.
+- Configurar `CORS_ORIGIN` con el dominio exacto del frontend.
+- Configurar `VITE_API_URL` con la URL publica del backend.

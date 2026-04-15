@@ -1,0 +1,98 @@
+{
+  "client": "Thunder Client",
+  "collectionName": "A3 Mejora Continua - API",
+  "dateExported": "2026-04-15",
+  "version": "1.0",
+  "folders": [
+    {
+      "name": "Auth",
+      "requests": [
+        {
+          "name": "Login",
+          "method": "POST",
+          "url": "http://localhost:4000/api/auth/login",
+          "headers": [{ "name": "Content-Type", "value": "application/json" }],
+          "body": { "type": "json", "raw": "{\n  \"email\": \"admin@a3.com\",\n  \"password\": \"Password123\"\n}" }
+        }
+      ]
+    },
+    {
+      "name": "A3",
+      "requests": [
+        {
+          "name": "List A3",
+          "method": "GET",
+          "url": "http://localhost:4000/api/a3"
+        },
+        {
+          "name": "Get A3 by ID",
+          "method": "GET",
+          "url": "http://localhost:4000/api/a3/1"
+        },
+        {
+          "name": "Download A3 PDF",
+          "method": "GET",
+          "url": "http://localhost:4000/api/a3/1/pdf"
+        }
+      ]
+    },
+    {
+      "name": "Data",
+      "requests": [
+        {
+          "name": "Upload Data",
+          "method": "POST",
+          "url": "http://localhost:4000/api/data/upload",
+          "body": {
+            "type": "form-data",
+            "formData": [
+              { "key": "file", "type": "file", "value": "<select-file>" },
+              { "key": "linea", "type": "text", "value": "L2 - Puertas" },
+              { "key": "departamento", "type": "text", "value": "Producción" }
+            ]
+          }
+        },
+        {
+          "name": "Pareto",
+          "method": "GET",
+          "url": "http://localhost:4000/api/data/pareto?area=L2%20-%20Puertas&top=10"
+        }
+      ]
+    },
+    {
+      "name": "AI",
+      "requests": [
+        {
+          "name": "Generate Analisis",
+          "method": "POST",
+          "url": "http://localhost:4000/api/ai/generate-analisis",
+          "headers": [{ "name": "Content-Type", "value": "application/json" }],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"area\": \"L2 - Puertas\",\n  \"dateFrom\": \"2026-04-01T00:00:00.000Z\",\n  \"dateTo\": \"2026-04-15T23:59:59.000Z\",\n  \"top\": 10,\n  \"contexto\": \"Generar borrador profesional para A3\"\n}"
+          }
+        },
+        {
+          "name": "Generate Causa Raiz",
+          "method": "POST",
+          "url": "http://localhost:4000/api/ai/generate-causa-raiz",
+          "headers": [{ "name": "Content-Type", "value": "application/json" }],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"area\": \"L2 - Puertas\",\n  \"dateFrom\": \"2026-04-01T00:00:00.000Z\",\n  \"dateTo\": \"2026-04-15T23:59:59.000Z\",\n  \"top\": 10,\n  \"contexto\": \"Analizar causa raiz\"\n}"
+          }
+        },
+        {
+          "name": "Generate Plan Accion",
+          "method": "POST",
+          "url": "http://localhost:4000/api/ai/generate-plan-accion",
+          "headers": [{ "name": "Content-Type", "value": "application/json" }],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"area\": \"L2 - Puertas\",\n  \"dateFrom\": \"2026-04-01T00:00:00.000Z\",\n  \"dateTo\": \"2026-04-15T23:59:59.000Z\",\n  \"top\": 10,\n  \"contexto\": \"Proponer acciones\"\n}"
+          }
+        }
+      ]
+    }
+  ]
+}

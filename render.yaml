@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: a3-improvement-backend
+    env: node
+    plan: starter
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 4000
+      - key: AUTO_MIGRATE
+        value: true
+      - key: DB_FALLBACK_TO_MEMORY
+        value: false
+      - key: JWT_EXPIRES_IN
+        value: 8h
+      - key: GOOGLE_AI_MODEL
+        value: gemini-1.5-flash
+      # Define en Render:
+      # - DATABASE_URL
+      # - JWT_SECRET
+      # - GOOGLE_AI_API_KEY
+      # - CORS_ORIGIN (ej: https://tu-frontend.vercel.app)

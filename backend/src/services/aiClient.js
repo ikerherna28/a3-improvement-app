@@ -16,7 +16,16 @@ export async function generateWithGemini(prompt) {
   const model = createAiModel();
 
   if (!model) {
-    throw new HttpError(503, "Google AI no configurado. Define GOOGLE_AI_API_KEY en backend/.env");
+    const fallbackMessage = [
+      "Modo local sin API key de Google AI.",
+      "", 
+      "Resumen profesional generado por el sistema:",
+      "- El entorno no tiene GOOGLE_AI_API_KEY configurada, por lo que se devuelve una respuesta segura y determinista.",
+      "- La estructura del prompt fue recibida correctamente y puede activarse Gemini cuando la clave esté disponible.",
+      "- Recomendación: configurar la API key para obtener análisis generados por Gemini en producción."
+    ].join("\n");
+
+    return fallbackMessage;
   }
 
   try {

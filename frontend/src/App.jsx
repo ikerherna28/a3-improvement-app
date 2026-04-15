@@ -1,42 +1,85 @@
-import { useMemo } from "react";
+﻿import { Suspense, lazy } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './context/AuthProvider';
+import { ProtectedRoute } from './components/ProtectedRoute';
+import { LoadingSpinner } from './components/LoadingSpinner';
+
+const LoginPage = lazy(() => import('./pages/LoginPage').then((module) => ({ default: module.LoginPage })));
+const RegisterPage = lazy(() => import('./pages/RegisterPage').then((module) => ({ default: module.RegisterPage })));
+const DashboardPage = lazy(() => import('./pages/DashboardPage').then((module) => ({ default: module.DashboardPage })));
+const A3CreatePage = lazy(() => import('./pages/A3CreatePage').then((module) => ({ default: module.A3CreatePage })));
+const A3DetailPage = lazy(() => import('./pages/A3DetailPage').then((module) => ({ default: module.A3DetailPage })));
+const A3PreviewPage = lazy(() => import('./pages/A3PreviewPage').then((module) => ({ default: module.A3PreviewPage })));
+const DataImportPage = lazy(() => import('./pages/DataImportPage').then((module) => ({ default: module.DataImportPage })));
+const ParetoPage = lazy(() => import('./pages/ParetoPage').then((module) => ({ default: module.ParetoPage })));
 
 function App() {
-  const apiUrl = useMemo(() => import.meta.env.VITE_API_URL || "http://localhost:4000", []);
-
   return (
-    <main className="min-h-screen bg-[var(--color-background)] px-6 py-10 text-slate-900">
-      <section className="mx-auto max-w-5xl rounded-3xl border border-slate-200 bg-white p-8 shadow-xl">
-        <p className="mb-3 inline-flex rounded-full bg-[var(--color-purple)] px-4 py-1 text-sm font-semibold text-white">
-          A3 Improvement App
-        </p>
-        <h1 className="text-3xl font-bold tracking-tight text-[var(--color-purple)] md:text-4xl">
-          Setup inicial completado
-        </h1>
-        <p className="mt-4 max-w-3xl text-base text-slate-700">
-          Frontend React + Tailwind listo. Backend Express disponible para integracion y evolucion de
-          funcionalidades A3.
-        </p>
+    <Router>
+      <AuthProvider>
+        <Suspense fallback={<LoadingSpinner label="Cargando aplicación..." size="lg" className="min-h-screen" />}>
+          <Routes>
+            {/* Rutas públicas */}
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
 
-        <div className="mt-8 grid gap-4 md:grid-cols-3">
-          <article className="rounded-2xl border border-slate-200 p-4">
-            <h2 className="font-semibold text-[var(--color-purple)]">API Base</h2>
-            <p className="mt-2 text-sm text-slate-600">Endpoint de salud para verificar despliegue del backend.</p>
-          </article>
-          <article className="rounded-2xl border border-slate-200 p-4">
-            <h2 className="font-semibold text-[var(--color-purple)]">PostgreSQL</h2>
-            <p className="mt-2 text-sm text-slate-600">Conexion preparada mediante variable DATABASE_URL.</p>
-          </article>
-          <article className="rounded-2xl border border-slate-200 p-4">
-            <h2 className="font-semibold text-[var(--color-purple)]">Google AI</h2>
-            <p className="mt-2 text-sm text-slate-600">Cliente base inicializado cuando exista API key.</p>
-          </article>
-        </div>
+            {/* Rutas protegidas */}
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <DashboardPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/a3/new"
+              element={
+                <ProtectedRoute>
+                  <A3CreatePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/a3/:id"
+              element={
+                <ProtectedRoute>
+                  <A3DetailPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/a3/:id/preview"
+              element={
+                <ProtectedRoute>
+                  <A3PreviewPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/data/import"
+              element={
+                <ProtectedRoute>
+                  <DataImportPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/pareto"
+              element={
+                <ProtectedRoute>
+                  <ParetoPage />
+                </ProtectedRoute>
+              }
+            />
 
-        <div className="mt-8 rounded-2xl bg-[var(--color-orange)]/10 p-4">
-          <p className="text-sm font-medium text-[var(--color-orange)]">URL backend actual: {apiUrl}</p>
-        </div>
-      </section>
-    </main>
+            {/* Redirección por defecto */}
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </Routes>
+        </Suspense>
+      </AuthProvider>
+    </Router>
   );
 }
 

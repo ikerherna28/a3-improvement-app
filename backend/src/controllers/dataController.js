@@ -58,6 +58,11 @@ function toTrimmedText(value) {
   return String(value).trim();
 }
 
+function toOptionalTrimmedText(value) {
+  const text = toTrimmedText(value);
+  return text || null;
+}
+
 function normalizeRow(rawRow) {
   const normalized = {
     area: toTrimmedText(getCellValueByAliases(rawRow, areaKeys)) || "Sin area",
@@ -113,6 +118,8 @@ export async function uploadData(req, res, next) {
     const sourceName = req.file.originalname;
     const sourceType = sourceName.toLowerCase().endsWith(".csv") ? "csv" : "excel";
     const parsedRows = parseWorkbookBuffer(req.file);
+    const linea = toOptionalTrimmedText(req.body?.linea);
+    const departamento = toOptionalTrimmedText(req.body?.departamento);
 
     if (!parsedRows.length) {
       throw new HttpError(400, "El archivo no contiene filas de datos.");
@@ -125,7 +132,14 @@ export async function uploadData(req, res, next) {
     for (const item of parsedRows) {
       try {
         const normalized = normalizeRow(item.row);
-        const contentHash = buildHash(normalized);
+        const finalArea = normalized.area === "Sin area" ? (linea || departamento || normalized.area) : normalized.area;
+        const normalizedWithMeta = {
+          ...normalized,
+          area: finalArea,
+          linea_importada: linea,
+          departamento_importado: departamento
+        };
+        const contentHash = buildHash(normalizedWithMeta);
         const uploadedBy = req.user?.id ? Number(req.user.id) : null;
 
         const insertResult = await query(
@@ -147,14 +161,14 @@ export async function uploadData(req, res, next) {
             sourceName,
             sourceType,
             JSON.stringify({
-              ...normalized,
+              ...normalizedWithMeta,
               origen_hoja: item.sheetName,
-              fecha_normalizada: toIsoDateOrNull(normalized.fecha)
+              fecha_normalizada: toIsoDateOrNull(normalizedWithMeta.fecha)
             }),
             uploadedBy,
             contentHash,
             sourceName,
-            `${normalized.area}|${normalized.problema}`.slice(0, 120)
+            `${normalizedWithMeta.area}|${normalizedWithMeta.problema}`.slice(0, 120)
           ]
         );
 

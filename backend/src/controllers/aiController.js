@@ -80,9 +80,7 @@ async function getParetoData(filters) {
 }
 
 function ensureDataAvailability(pareto) {
-  if (!pareto.total) {
-    throw new HttpError(400, "No hay datos para generar analisis. Sube datos primero en /api/data/upload");
-  }
+  return pareto.total > 0;
 }
 
 function buildBaseContext(filters, pareto) {
@@ -102,7 +100,7 @@ export async function generateAnalisis(req, res, next) {
   try {
     const filters = filterSchema.parse(req.body || {});
     const pareto = await getParetoData(filters);
-    ensureDataAvailability(pareto);
+    const hasData = ensureDataAvailability(pareto);
 
     const prompt = `
 Eres consultor senior de mejora continua A3 en entorno industrial.
@@ -110,6 +108,7 @@ Genera un analisis ejecutivo en espanol, profesional y accionable.
 
 Contexto de datos: ${JSON.stringify(buildBaseContext(filters, pareto), null, 2)}
 Contexto adicional del usuario: ${filters.contexto || "No proporcionado"}
+Disponibilidad de datos: ${hasData ? "Hay datos Pareto disponibles" : "No hay datos Pareto; genera una propuesta provisional basada en el contexto"}
 
 Requisitos de salida:
 1) Resumen ejecutivo (maximo 120 palabras).
@@ -130,7 +129,7 @@ export async function generateCausaRaiz(req, res, next) {
   try {
     const filters = filterSchema.parse(req.body || {});
     const pareto = await getParetoData(filters);
-    ensureDataAvailability(pareto);
+    const hasData = ensureDataAvailability(pareto);
 
     const topCause = pareto.causas[0]?.causa || "Sin causa identificada";
     const prompt = `
@@ -140,6 +139,7 @@ Realiza un analisis 5-Why en espanol sobre la causa principal detectada.
 Causa principal: ${topCause}
 Datos de soporte: ${JSON.stringify(buildBaseContext(filters, pareto), null, 2)}
 Contexto adicional: ${filters.contexto || "No proporcionado"}
+Disponibilidad de datos: ${hasData ? "Hay datos Pareto disponibles" : "No hay datos Pareto; genera una version preliminar"}
 
 Formato obligatorio:
 - Problema observado
@@ -163,7 +163,7 @@ export async function generatePlanAccion(req, res, next) {
   try {
     const filters = filterSchema.parse(req.body || {});
     const pareto = await getParetoData(filters);
-    ensureDataAvailability(pareto);
+    const hasData = ensureDataAvailability(pareto);
 
     const prompt = `
 Eres un lider de mejora continua A3.
@@ -171,6 +171,7 @@ Genera un plan de accion concreto en espanol para reducir las principales causas
 
 Datos Pareto: ${JSON.stringify(buildBaseContext(filters, pareto), null, 2)}
 Contexto adicional: ${filters.contexto || "No proporcionado"}
+Disponibilidad de datos: ${hasData ? "Hay datos Pareto disponibles" : "No hay datos Pareto; genera un plan provisional"}
 
 El plan debe incluir tabla textual con columnas:
 - accion
@@ -194,7 +195,7 @@ export async function generateEstandarizacion(req, res, next) {
   try {
     const filters = filterSchema.parse(req.body || {});
     const pareto = await getParetoData(filters);
-    ensureDataAvailability(pareto);
+    const hasData = ensureDataAvailability(pareto);
 
     const prompt = `
 Actua como responsable de estandarizacion operativa.
@@ -202,6 +203,7 @@ Genera una propuesta de estandarizacion para sostener mejoras A3.
 
 Datos Pareto: ${JSON.stringify(buildBaseContext(filters, pareto), null, 2)}
 Contexto adicional: ${filters.contexto || "No proporcionado"}
+Disponibilidad de datos: ${hasData ? "Hay datos Pareto disponibles" : "No hay datos Pareto; genera un borrador inicial"}
 
 Incluye:
 1) Estandar de trabajo propuesto.
