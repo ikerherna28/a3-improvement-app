@@ -11,24 +11,21 @@ export const LoginPage = () => {
 
   return (
     <AuthLayout title="Inicia sesión en tu cuenta">
-      {/* Formulario de login */}
       <LoginForm onSuccess={handleLoginSuccess} />
 
-      {/* Link a registro */}
-      <div className="mt-6 text-center text-sm text-gray-600">
+      <div className="mt-6 text-center text-sm text-slate-600">
         <p>
           ¿No tienes cuenta?{' '}
-          <Link to="/register" className="text-corporate-purple font-semibold hover:underline transition-colors">
+          <Link to="/register" className="font-semibold text-corporate-purple transition-colors hover:text-corporate-orange">
             Regístrate aquí
           </Link>
         </p>
       </div>
 
-      {/* Demo credentials info */}
-      <div className="mt-6 bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-lg text-xs text-center">
-        <p className="font-semibold mb-2">🔓 Credenciales de demostración:</p>
-        <p>Email: <code className="bg-blue-100 px-2 py-1 rounded">admin@example.com</code></p>
-        <p>Contraseña: <code className="bg-blue-100 px-2 py-1 rounded">Password123</code></p>
+      <div className="mt-6 rounded-2xl border border-corporate-purple/20 bg-[linear-gradient(135deg,rgba(138,28,140,0.08),rgba(242,98,15,0.08))] px-4 py-4 text-center text-xs text-slate-700 shadow-sm">
+        <p className="font-semibold text-slate-900">Credenciales de demostración</p>
+        <p className="mt-2">Email: <span className="rounded bg-white/80 px-2 py-1 font-semibold text-corporate-purple">admin@example.com</span></p>
+        <p className="mt-1">Contraseña: <span className="rounded bg-white/80 px-2 py-1 font-semibold text-corporate-purple">Password123</span></p>
       </div>
     </AuthLayout>
   );

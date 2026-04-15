@@ -98,23 +98,23 @@ export const RegisterForm = ({ onSuccess }) => {
     <form onSubmit={handleSubmit} className="space-y-5">
       {/* Error message */}
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm animate-pulse">
-          <p className="font-semibold">❌ Error</p>
-          <p>{error}</p>
+        <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 shadow-sm">
+          <p className="font-semibold">Error</p>
+          <p className="mt-1 leading-6">{error}</p>
         </div>
       )}
 
       {/* Success message */}
       {success && (
-        <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm animate-pulse">
-          <p className="font-semibold">✅ Éxito</p>
-          <p>{success}</p>
+        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700 shadow-sm">
+          <p className="font-semibold">Éxito</p>
+          <p className="mt-1 leading-6">{success}</p>
         </div>
       )}
 
       {/* Name input */}
       <div>
-        <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
+        <label htmlFor="name" className="mb-2 block text-sm font-semibold text-slate-700">
           Nombre completo
         </label>
         <input
@@ -125,14 +125,14 @@ export const RegisterForm = ({ onSuccess }) => {
           onChange={handleChange}
           placeholder="Tu nombre"
           disabled={isLoading}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-corporate-purple focus:border-transparent transition-all disabled:opacity-50 disabled:bg-gray-100"
+          className="w-full rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-3 text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-transparent focus:bg-white focus:ring-2 focus:ring-corporate-purple/30 disabled:cursor-not-allowed disabled:opacity-50"
           autoComplete="name"
         />
       </div>
 
       {/* Email input */}
       <div>
-        <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+        <label htmlFor="email" className="mb-2 block text-sm font-semibold text-slate-700">
           Email
         </label>
         <input
@@ -143,14 +143,14 @@ export const RegisterForm = ({ onSuccess }) => {
           onChange={handleChange}
           placeholder="tuemail@example.com"
           disabled={isLoading}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-corporate-purple focus:border-transparent transition-all disabled:opacity-50 disabled:bg-gray-100"
+          className="w-full rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-3 text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-transparent focus:bg-white focus:ring-2 focus:ring-corporate-purple/30 disabled:cursor-not-allowed disabled:opacity-50"
           autoComplete="email"
         />
       </div>
 
       {/* Password input */}
       <div>
-        <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
+        <label htmlFor="password" className="mb-2 block text-sm font-semibold text-slate-700">
           Contraseña
         </label>
         <input
@@ -161,17 +161,17 @@ export const RegisterForm = ({ onSuccess }) => {
           onChange={handleChange}
           placeholder="Min. 8 caracteres, 1 mayúscula, 1 número"
           disabled={isLoading}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-corporate-purple focus:border-transparent transition-all disabled:opacity-50 disabled:bg-gray-100"
+          className="w-full rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-3 text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-transparent focus:bg-white focus:ring-2 focus:ring-corporate-purple/30 disabled:cursor-not-allowed disabled:opacity-50"
           autoComplete="new-password"
         />
-        <p className="text-xs text-gray-500 mt-1">
+        <p className="mt-1 text-xs text-slate-500">
           Requiere: mín. 8 caracteres, 1 mayúscula, 1 número
         </p>
       </div>
 
       {/* Confirm Password input */}
       <div>
-        <label htmlFor="confirmPassword" className="block text-sm font-semibold text-gray-700 mb-2">
+        <label htmlFor="confirmPassword" className="mb-2 block text-sm font-semibold text-slate-700">
           Confirmar contraseña
         </label>
         <input
@@ -182,7 +182,7 @@ export const RegisterForm = ({ onSuccess }) => {
           onChange={handleChange}
           placeholder="Repite tu contraseña"
           disabled={isLoading}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-corporate-purple focus:border-transparent transition-all disabled:opacity-50 disabled:bg-gray-100"
+          className="w-full rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-3 text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-transparent focus:bg-white focus:ring-2 focus:ring-corporate-purple/30 disabled:cursor-not-allowed disabled:opacity-50"
           autoComplete="new-password"
         />
       </div>
@@ -191,7 +191,7 @@ export const RegisterForm = ({ onSuccess }) => {
       <button
         type="submit"
         disabled={isLoading || !!success}
-        className="w-full bg-corporate-orange hover:bg-orange-600 text-white font-semibold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-corporate-purple via-corporate-orange to-orange-600 px-4 py-3 font-semibold text-white shadow-[0_14px_28px_rgba(242,98,15,0.26)] transition-transform hover:-translate-y-0.5 hover:shadow-[0_18px_36px_rgba(242,98,15,0.3)] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
       >
         {isLoading && (
           <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
