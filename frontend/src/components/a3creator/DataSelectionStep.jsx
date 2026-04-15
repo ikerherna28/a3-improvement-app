@@ -1,23 +1,7 @@
 import { useMemo } from 'react';
 import { LoadingSpinner } from '../LoadingSpinner';
 import { ParetoChart } from '../charts/ParetoChart';
-
-const DEFAULT_LINEAS = [
-  'L1 - Traccion',
-  'L2 - Puertas',
-  'L3 - Cabina',
-  'L4 - Accionamientos',
-  'L5 - Mantenimiento',
-];
-
-const DEFAULT_CATEGORIAS = [
-  'Calidad',
-  'Seguridad',
-  'Productividad',
-  'Mantenimiento',
-  'Coste',
-  'Entrega',
-];
+import { workbookAreas, workbookCategories } from '../../utils/workbookOptions';
 
 export const DataSelectionStep = ({
   values,
@@ -34,14 +18,14 @@ export const DataSelectionStep = ({
   return (
     <div className="space-y-6">
       <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-1">Paso 1: Seleccion de datos</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-1">Paso 1: Selección de datos</h2>
         <p className="text-sm text-gray-600 mb-6">
-          Define filtros para construir el Pareto base del A3.
+          Define filtros basados en el registro real para construir el Pareto base del A3.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Linea</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Área</label>
             <select
               value={values.linea}
               onChange={(e) => onChange('linea', e.target.value)}
@@ -51,10 +35,10 @@ export const DataSelectionStep = ({
                   : 'border-gray-300 focus:ring-purple-200'
               }`}
             >
-              <option value="">Selecciona una linea...</option>
-              {DEFAULT_LINEAS.map((linea) => (
-                <option key={linea} value={linea}>
-                  {linea}
+              <option value="">Selecciona un área...</option>
+              {workbookAreas.map((area) => (
+                <option key={area} value={area}>
+                  {area}
                 </option>
               ))}
             </select>
@@ -62,7 +46,7 @@ export const DataSelectionStep = ({
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Categoria</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Categoría</label>
             <select
               value={values.categoria}
               onChange={(e) => onChange('categoria', e.target.value)}
@@ -72,8 +56,8 @@ export const DataSelectionStep = ({
                   : 'border-gray-300 focus:ring-purple-200'
               }`}
             >
-              <option value="">Selecciona una categoria...</option>
-              {DEFAULT_CATEGORIAS.map((categoria) => (
+              <option value="">Selecciona una categoría...</option>
+              {workbookCategories.map((categoria) => (
                 <option key={categoria} value={categoria}>
                   {categoria}
                 </option>

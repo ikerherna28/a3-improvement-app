@@ -99,7 +99,7 @@ export const ParetoPage = () => {
                 type="text"
                 value={filters.area}
                 onChange={(e) => handleFilterChange('area', e.target.value)}
-                placeholder="Ej. L2 - Puertas"
+                placeholder="Ej. CONTROLLER CMC"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-200"
               />
             </div>

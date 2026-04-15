@@ -80,7 +80,7 @@ const buildParetoSummary = (items, linea, fechaDesde, fechaHasta) => {
     })
     .join(' | ');
 
-  return `Linea: ${linea}. Periodo: ${fechaDesde} a ${fechaHasta}. Top Pareto: ${topText}.`;
+  return `Área: ${linea}. Periodo: ${fechaDesde} a ${fechaHasta}. Top Pareto: ${topText}.`;
 };
 
 export const A3CreatorPage = () => {
@@ -298,11 +298,11 @@ export const A3CreatorPage = () => {
     const newErrors = {};
 
     if (!formData.linea) {
-      newErrors.linea = 'Selecciona una linea.';
+      newErrors.linea = 'Selecciona un área.';
     }
 
     if (!formData.categoria) {
-      newErrors.categoria = 'Selecciona una categoria.';
+      newErrors.categoria = 'Selecciona una categoría.';
     }
 
     if (!formData.fechaDesde) {

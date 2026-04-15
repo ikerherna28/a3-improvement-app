@@ -6,6 +6,7 @@ import { ImportPreview } from '../components/import/ImportPreview';
 import { Alert } from '../components/Alert';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { dataService } from '../services/api';
+import { workbookAreas, workbookCategories } from '../utils/workbookOptions';
 
 export const DataImportPage = () => {
   const navigate = useNavigate();
@@ -18,23 +19,8 @@ export const DataImportPage = () => {
   const [uploadHistory, setUploadHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
 
-  // Opciones de Línea y Departamento (pueden venir del backend)
-  const lineas = [
-    'L1 - Tracción',
-    'L2 - Puertas',
-    'L3 - Cabina',
-    'L4 - Accionamientos',
-    'L5 - Mantenimiento',
-  ];
-
-  const departamentos = [
-    'Producción',
-    'Calidad',
-    'Mantenimiento',
-    'Logística',
-    'Administración',
-    'Seguridad',
-  ];
+  const areas = workbookAreas;
+  const categorias = workbookCategories;
 
   const handleFileSelect = (data) => {
     setFileData(data);
@@ -65,7 +51,7 @@ export const DataImportPage = () => {
     if (!linea) {
       setUploadMessage({
         type: 'error',
-        text: 'Por favor selecciona una línea',
+        text: 'Por favor selecciona un área',
       });
       return;
     }
@@ -73,7 +59,7 @@ export const DataImportPage = () => {
     if (!departamento) {
       setUploadMessage({
         type: 'error',
-        text: 'Por favor selecciona un departamento',
+        text: 'Por favor selecciona una categoría',
       });
       return;
     }
@@ -142,7 +128,7 @@ export const DataImportPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <h1 className="text-3xl font-bold text-gray-900">Importar datos</h1>
           <p className="mt-2 text-gray-600">
-            Carga datos desde Excel o CSV para crear nuevos A3 o enriquecer existentes
+            Carga datos desde Excel o CSV para crear nuevos A3 o enriquecer existentes.
           </p>
         </div>
       </div>
@@ -214,36 +200,36 @@ export const DataImportPage = () => {
                   {/* Línea Selector */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Línea de producción *
+                      Área de proceso *
                     </label>
                     <select
                       value={linea}
                       onChange={(e) => setLinea(e.target.value)}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-corporate-purple focus:ring-2 focus:ring-purple-200"
                     >
-                      <option value="">Selecciona una línea...</option>
-                      {lineas.map((linea) => (
-                        <option key={linea} value={linea}>
-                          {linea}
+                      <option value="">Selecciona un área...</option>
+                      {areas.map((area) => (
+                        <option key={area} value={area}>
+                          {area}
                         </option>
                       ))}
                     </select>
                   </div>
 
-                  {/* Departamento Selector */}
+                  {/* Categoría Selector */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Departamento *
+                      Categoría *
                     </label>
                     <select
                       value={departamento}
                       onChange={(e) => setDepartamento(e.target.value)}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-corporate-purple focus:ring-2 focus:ring-purple-200"
                     >
-                      <option value="">Selecciona un departamento...</option>
-                      {departamentos.map((dept) => (
-                        <option key={dept} value={dept}>
-                          {dept}
+                      <option value="">Selecciona una categoría...</option>
+                      {categorias.map((categoria) => (
+                        <option key={categoria} value={categoria}>
+                          {categoria}
                         </option>
                       ))}
                     </select>
