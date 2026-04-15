@@ -8,6 +8,18 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const getAuthErrorMessage = (err, fallbackMessage) => {
+    if (err.response?.data?.error || err.response?.data?.message) {
+      return err.response.data.error || err.response.data.message;
+    }
+
+    if (err.code === 'ERR_NETWORK' || err.message === 'Network Error') {
+      return 'No se pudo conectar con el servidor. Comprueba que el backend esté en ejecución.';
+    }
+
+    return err.message || fallbackMessage;
+  };
+
   // Cargar sesión existente del localStorage
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
@@ -35,7 +47,7 @@ export const AuthProvider = ({ children }) => {
       setUser(userData);
       return response.data;
     } catch (err) {
-      const errorMessage = err.response?.data?.error || err.response?.data?.message || 'Error en login';
+      const errorMessage = getAuthErrorMessage(err, 'Error en login');
       setError(errorMessage);
       throw err;
     } finally {
@@ -58,7 +70,7 @@ export const AuthProvider = ({ children }) => {
       setUser(userData);
       return response.data;
     } catch (err) {
-      const errorMessage = err.response?.data?.error || err.response?.data?.message || 'Error en registro';
+      const errorMessage = getAuthErrorMessage(err, 'Error en registro');
       setError(errorMessage);
       throw err;
     } finally {

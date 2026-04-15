@@ -40,7 +40,10 @@ export const ImportValidation = ({
     // 2. Validar celdas vacías
     const emptyRowIndices = [];
     data.data.forEach((row, idx) => {
-      const allEmpty = Object.values(row).every(v => !v || String(v).trim() === '');
+      const rowValues = Object.entries(row)
+        .filter(([key]) => !key.startsWith('__'))
+        .map(([, value]) => value);
+      const allEmpty = rowValues.every(v => !v || String(v).trim() === '');
       if (allEmpty) {
         emptyRowIndices.push(idx + 2); // +2 porque Excel cuenta desde 1 + header
       }
@@ -79,7 +82,9 @@ export const ImportValidation = ({
     // 4. Validar tipos de datos
     const typeIssues = [];
     data.data.forEach((row, idx) => {
-      Object.entries(row).forEach(([col, value]) => {
+      Object.entries(row)
+        .filter(([col]) => !col.startsWith('__'))
+        .forEach(([col, value]) => {
         if (!value || String(value).trim() === '') return;
 
         // Detectar columnas que parecen números pero tienen texto

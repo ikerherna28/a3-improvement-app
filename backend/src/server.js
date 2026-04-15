@@ -11,12 +11,19 @@ import apiRouter from "./routes/index.js";
 const app = express();
 
 const allowedOrigins = new Set(env.corsOrigins);
+const isLocalDevOrigin = (origin) => {
+  if (!origin) {
+    return true;
+  }
+
+  return /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin);
+};
 
 app.use(helmet());
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.has(origin)) {
+      if (!origin || allowedOrigins.has(origin) || (env.nodeEnv !== "production" && isLocalDevOrigin(origin))) {
         callback(null, true);
         return;
       }

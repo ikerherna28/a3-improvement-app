@@ -44,7 +44,7 @@ export const LoginForm = ({ onSuccess }) => {
         navigate('/dashboard');
       }
     } catch (err) {
-      const errorMsg = err.response?.data?.error || err.response?.data?.message || 'Error al iniciar sesión';
+      const errorMsg = err.response?.data?.error || err.response?.data?.message || err.message || 'No se pudo iniciar sesión. Revisa el servidor.';
       setError(errorMsg);
     } finally {
       setIsLoading(false);

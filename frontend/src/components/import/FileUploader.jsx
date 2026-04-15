@@ -32,23 +32,33 @@ export const FileUploader = ({ onFileSelect, acceptedFormats = ['.xlsx', '.xls',
           const data = e.target.result;
           const workbook = XLSX.read(data, { type: 'array' });
           
-          // Obtener primera hoja
-          const sheetName = workbook.SheetNames[0];
-          const worksheet = workbook.Sheets[sheetName];
-          
-          // Convertir a JSON
-          const jsonData = XLSX.utils.sheet_to_json(worksheet);
+          const combinedRows = [];
+          const combinedColumns = new Set();
 
-          if (jsonData.length === 0) {
+          workbook.SheetNames.forEach((sheetName) => {
+            const worksheet = workbook.Sheets[sheetName];
+            const jsonData = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+
+            jsonData.forEach((row) => {
+              Object.keys(row).forEach((column) => combinedColumns.add(column));
+              combinedRows.push({
+                ...row,
+                __sheetName: sheetName,
+              });
+            });
+          });
+
+          if (combinedRows.length === 0) {
             throw new Error('El archivo está vacío');
           }
 
           setSelectedFile({
             name: file.name,
             size: file.size,
-            rows: jsonData.length,
-            columns: Object.keys(jsonData[0]),
-            data: jsonData,
+            rows: combinedRows.length,
+            columns: Array.from(combinedColumns),
+            data: combinedRows,
+            sheets: workbook.SheetNames,
             originalFile: file,
           });
 
@@ -56,9 +66,10 @@ export const FileUploader = ({ onFileSelect, acceptedFormats = ['.xlsx', '.xls',
           onFileSelect({
             name: file.name,
             size: file.size,
-            rows: jsonData.length,
-            columns: Object.keys(jsonData[0]),
-            data: jsonData,
+            rows: combinedRows.length,
+            columns: Array.from(combinedColumns),
+            data: combinedRows,
+            sheets: workbook.SheetNames,
             originalFile: file,
           });
         } catch (err) {

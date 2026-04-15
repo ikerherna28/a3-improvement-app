@@ -17,6 +17,7 @@ export const ImportPreview = ({ fileData, validation = null }) => {
 
   const previewRows = fileData.data.slice(0, 10);
   const hiddenRowsCount = Math.max(0, fileData.data.length - 10);
+  const previewColumns = fileData.columns.filter((column) => !column.startsWith('__'));
 
   // Determinar si hay errores en filas específicas
   const errorRowIndices = new Set();
@@ -46,7 +47,7 @@ export const ImportPreview = ({ fileData, validation = null }) => {
           <thead className="bg-gray-100 border-b border-gray-200 sticky top-0">
             <tr>
               <th className="px-4 py-2 text-left text-xs font-semibold text-gray-700 w-12">#</th>
-              {fileData.columns.map((col) => (
+              {previewColumns.map((col) => (
                 <th
                   key={col}
                   className="px-4 py-2 text-left text-xs font-semibold text-gray-700 bg-gray-100 whitespace-nowrap"
@@ -77,7 +78,7 @@ export const ImportPreview = ({ fileData, validation = null }) => {
                   </td>
 
                   {/* Celdas de datos */}
-                  {fileData.columns.map((col) => {
+                  {previewColumns.map((col) => {
                     const value = row[col];
                     const isEmpty = !value || String(value).trim() === '';
                     const displayValue = isEmpty ? '-' : String(value).substring(0, 30);
@@ -125,7 +126,7 @@ export const ImportPreview = ({ fileData, validation = null }) => {
         <div key={`expanded-${expandedIdx}`} className="bg-blue-50 border-t border-gray-200 p-4">
           <h4 className="font-semibold text-blue-900 mb-3">Fila {expandedIdx + 2} - Detalles completos</h4>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {fileData.columns.map((col) => {
+            {previewColumns.map((col) => {
               const value = previewRows[expandedIdx][col];
               const isEmpty = !value || String(value).trim() === '';
 

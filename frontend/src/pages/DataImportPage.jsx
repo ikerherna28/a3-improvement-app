@@ -6,21 +6,15 @@ import { ImportPreview } from '../components/import/ImportPreview';
 import { Alert } from '../components/Alert';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { dataService } from '../services/api';
-import { workbookAreas, workbookCategories } from '../utils/workbookOptions';
 
 export const DataImportPage = () => {
   const navigate = useNavigate();
   const [fileData, setFileData] = useState(null);
   const [validation, setValidation] = useState(null);
-  const [linea, setLinea] = useState('');
-  const [departamento, setDepartamento] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const [uploadMessage, setUploadMessage] = useState(null);
   const [uploadHistory, setUploadHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
-
-  const areas = workbookAreas;
-  const categorias = workbookCategories;
 
   const handleFileSelect = (data) => {
     setFileData(data);
@@ -48,22 +42,6 @@ export const DataImportPage = () => {
       return;
     }
 
-    if (!linea) {
-      setUploadMessage({
-        type: 'error',
-        text: 'Por favor selecciona un área',
-      });
-      return;
-    }
-
-    if (!departamento) {
-      setUploadMessage({
-        type: 'error',
-        text: 'Por favor selecciona una categoría',
-      });
-      return;
-    }
-
     setIsUploading(true);
     setUploadMessage(null);
 
@@ -75,16 +53,12 @@ export const DataImportPage = () => {
       // Enviar a backend usando multipart/form-data
       const { data } = await dataService.upload({
         file: fileData.originalFile,
-        linea,
-        departamento,
       });
 
       // Registrar en historial
       const historyEntry = {
         id: Date.now(),
         fileName: fileData.name,
-        linea,
-        departamento,
         rowsUploaded: data?.inserted ?? fileData.rows,
         timestamp: new Date().toLocaleString('es-ES'),
         status: 'success',
@@ -103,8 +77,6 @@ export const DataImportPage = () => {
       setTimeout(() => {
         setFileData(null);
         setValidation(null);
-        setLinea('');
-        setDepartamento('');
       }, 2000);
     } catch (error) {
       console.error('Upload error:', error);
@@ -128,7 +100,7 @@ export const DataImportPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <h1 className="text-3xl font-bold text-gray-900">Importar datos</h1>
           <p className="mt-2 text-gray-600">
-            Carga datos desde Excel o CSV para crear nuevos A3 o enriquecer existentes.
+            Sube el Excel completo. Se importarán todas las hojas y el sistema detectará los datos reales sin selección manual.
           </p>
         </div>
       </div>
@@ -184,7 +156,7 @@ export const DataImportPage = () => {
               <ImportPreview fileData={fileData} validation={validation} />
             </div>
 
-            {/* Step 4: Selectors */}
+            {/* Step 4: Submit Button */}
             {validation?.isValid && (
               <div className="bg-white rounded-lg shadow-md p-6 mb-6">
                 <div className="flex items-center mb-6">
@@ -192,49 +164,16 @@ export const DataImportPage = () => {
                     4
                   </div>
                   <h2 className="text-xl font-semibold text-gray-800">
-                    Información de importación
+                    Confirmar importación
                   </h2>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Línea Selector */}
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Área de proceso *
-                    </label>
-                    <select
-                      value={linea}
-                      onChange={(e) => setLinea(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-corporate-purple focus:ring-2 focus:ring-purple-200"
-                    >
-                      <option value="">Selecciona un área...</option>
-                      {areas.map((area) => (
-                        <option key={area} value={area}>
-                          {area}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Categoría Selector */}
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Categoría *
-                    </label>
-                    <select
-                      value={departamento}
-                      onChange={(e) => setDepartamento(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-corporate-purple focus:ring-2 focus:ring-purple-200"
-                    >
-                      <option value="">Selecciona una categoría...</option>
-                      {categorias.map((categoria) => (
-                        <option key={categoria} value={categoria}>
-                          {categoria}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
+                <p className="mb-4 text-sm text-gray-600">
+                  No hace falta elegir área ni categoría: el sistema importará el archivo completo y detectará los campos que ya existen en el Excel.
+                </p>
+                <p className="text-sm text-gray-700">
+                  Si faltan datos de área en alguna fila, se conservará como <span className="font-semibold">Sin area</span> para que puedas revisarla después.
+                </p>
               </div>
             )}
 
@@ -258,9 +197,9 @@ export const DataImportPage = () => {
                 <div className="flex gap-3">
                   <button
                     onClick={handleUpload}
-                    disabled={isUploading || !linea || !departamento}
+                    disabled={isUploading}
                     className={`flex-1 px-6 py-3 rounded-lg font-semibold text-white transition-all ${
-                      isUploading || !linea || !departamento
+                      isUploading
                         ? 'bg-gray-400 cursor-not-allowed'
                         : 'bg-corporate-purple hover:bg-purple-700 active:scale-95'
                     }`}
@@ -271,8 +210,6 @@ export const DataImportPage = () => {
                     onClick={() => {
                       setFileData(null);
                       setValidation(null);
-                      setLinea('');
-                      setDepartamento('');
                       setUploadMessage(null);
                     }}
                     disabled={isUploading}
@@ -309,7 +246,7 @@ export const DataImportPage = () => {
                     <div className="flex-1">
                       <p className="font-medium text-gray-800">{entry.fileName}</p>
                       <p className="text-sm text-gray-600">
-                        {entry.linea} • {entry.departamento} • {entry.rowsUploaded} filas
+                        {entry.rowsUploaded} filas importadas
                       </p>
                       <p className="text-xs text-gray-500">
                         Duplicadas: {entry.duplicates} • Inválidas: {entry.invalid}

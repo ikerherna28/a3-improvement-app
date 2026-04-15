@@ -87,7 +87,7 @@ export const RegisterForm = ({ onSuccess }) => {
         }, 1500);
       }
     } catch (err) {
-      const errorMsg = err.response?.data?.error || err.response?.data?.message || 'Error al registrarse. Intenta de nuevo.';
+      const errorMsg = err.response?.data?.error || err.response?.data?.message || err.message || 'No se pudo completar el registro. Revisa el servidor.';
       setError(errorMsg);
     } finally {
       setIsLoading(false);
